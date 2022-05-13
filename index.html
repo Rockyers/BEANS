@@ -10,11 +10,12 @@
 	<p id="nameText"></p>
 	<p id="emailText"></p>
 	<br>
+	<button id="emailVerify">Verify Email</button>
 	<button id="logout" class="link">Logout</button>
 	<script type="module">
 		import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
 		import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-analytics.js";
-		import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+		import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
 		
 		const firebaseConfig = {
 			apiKey: "AIzaSyAiiKuYzAGoQkj88cSzqKd87kGin0jmPuE",
@@ -41,6 +42,13 @@
 		}
 		document.getElementById("logout").onclick = logout;
 
+		function verifyEmail() {
+			sendEmailVerification(auth.currentUser)
+			.then(() => {
+				document.getElementById("emailVerify").disabled = true;
+			});
+		}
+
 		function main(user) {
 			const uid = user.uid;
 			const displayName = user.displayName; 
@@ -51,6 +59,9 @@
 			document.getElementById("pfp").src = photoURL;
 			document.getElementById("nameText").innerHTML = "Username: " + displayName;
 			document.getElementById("emailText").innerHTML = "Email: " + email;
+			
+			if (emailVerified === true) document.getElementById("emailVerify").disabled = true;
+			else document.getElementById("emailVerify").onclick = verifyEmail;
 		}
 	</script>
 </body>
