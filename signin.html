@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<h1>BEANS</h1>
+	<label for="email">Email:</label>
+	<input type="email" id="email" name="email"><a> </a><a id="emailErr" class="error"></a><br><br>
+	<label for="password">Password:</label>
+	<input type="password" id="password" name="password"><a> </a><a id="passwordErr" class="error"></a><br><br>
+	<input id="signin" type="button" value="Sign in"/><br>
+	<p>Don't have an account? <a class="link" href="signup.html">sign up</a></p><br>
+	<input id="google" type="button" value="Sign in with Google"/>
+	<script type="module">
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+		import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-analytics.js";
+		import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+		
+		const firebaseConfig = {
+			apiKey: "AIzaSyAiiKuYzAGoQkj88cSzqKd87kGin0jmPuE",
+			authDomain: "beans-dd5e9.firebaseapp.com",
+			projectId: "beans-dd5e9",
+			storageBucket: "beans-dd5e9.appspot.com",
+			messagingSenderId: "1097417497977",
+			appId: "1:1097417497977:web:f978d5745541c8c83663a8",
+			measurementId: "G-EQB9KH77RC"
+		};
+
+		const app = initializeApp(firebaseConfig);
+		const analytics = getAnalytics(app);
+		const auth = getAuth(app);
+		const provider = new GoogleAuthProvider();
+
+		function signIn() {
+			let email = document.getElementById("email").value;
+			let password = document.getElementById("password").value;
+			if (email && password) {
+				document.getElementById("passwordErr").innerHTML = "";
+				document.getElementById("emailErr").innerHTML = "";
+
+				signInWithEmailAndPassword(auth, email, password)
+				.then((userCredential) => {
+					const user = userCredential.user;
+					window.location.href = "index.html";
+				})
+				.catch((error) => {
+					switch (error.code) {
+						case 'auth/invalid-email':
+							document.getElementById("emailErr").innerHTML = "Invalid email";
+							break;
+						case 'auth/wrong-password':
+							document.getElementById("passwordErr").innerHTML = "Wrong password";
+							break;
+						case 'auth/user-not-found':
+							document.getElementById("emailErr").innerHTML = "That email is not signed up";
+							break;
+					}
+				});
+			} else {
+				if (!password) document.getElementById("passwordErr").innerHTML = "Please enter password";
+				else document.getElementById("passwordErr").innerHTML = "";
+				if (!email) document.getElementById("emailErr").innerHTML = "Please enter email";
+				else document.getElementById("emailErr").innerHTML = "";
+			}
+		}
+
+		function signInGoogle() { 
+			signInWithPopup(auth, provider)
+			.then((result) => {
+				// This gives you a Google Access Token. You can use it to access the Google API.
+				const credential = GoogleAuthProvider.credentialFromResult(result);
+				const token = credential.accessToken;
+				window.location.href = "index.html";
+			}).catch((error) => {
+				// Handle Errors here.
+				const errorCode = error.code;
+				const errorMessage = error.message;
+
+				const email = error.email;
+
+				const credential = GoogleAuthProvider.credentialFromError(error);
+			});
+		}
+
+		document.getElementById("signin").onclick = signIn;
+		document.getElementById("google").onclick = signInGoogle;
+	</script>
+</body>
+</html>

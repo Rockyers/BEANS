@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
+	<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css" />
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<h1>BEANS</h1>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><a> </a><a id="nameErr" class="error"></a><br><br>
+	<label for="email">Email:</label>
+	<input type="email" id="email" name="email"><a> </a><a id="emailErr" class="error"></a><br><br>
+	<label for="password">Password:</label>
+	<input type="password" id="password" name="password"><a> </a><a id="passwordErr" class="error"></a><br><br>
+	<input id="signup" type="button" value="Sign Up"/><br>
+	<p>Have an account? <a class="link" href="signin.html">Sign in</a></p>
+	<script type="module">
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+		import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-analytics.js";
+		import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+		
+		const firebaseConfig = {
+			apiKey: "AIzaSyAiiKuYzAGoQkj88cSzqKd87kGin0jmPuE",
+			authDomain: "beans-dd5e9.firebaseapp.com",
+			projectId: "beans-dd5e9",
+			storageBucket: "beans-dd5e9.appspot.com",
+			messagingSenderId: "1097417497977",
+			appId: "1:1097417497977:web:f978d5745541c8c83663a8",
+			measurementId: "G-EQB9KH77RC"
+		};
+
+		const app = initializeApp(firebaseConfig);
+		const analytics = getAnalytics(app);
+		const auth = getAuth(app);
+
+		function signUp() {
+			let email = document.getElementById("email").value;
+			let password = document.getElementById("password").value;
+			let username = document.getElementById("username").value;
+			if (email && password && username) {
+				document.getElementById("emailErr").innerHTML = "";
+				document.getElementById("passwordErr").innerHTML = "";
+				document.getElementById("nameErr").innerHTML = "";
+
+				createUserWithEmailAndPassword(auth, email, password)
+				.then((userCredential) => {
+					const user = userCredential.user;
+					updateProfile(user, {
+						displayName: username, photoURL: "https://i.ibb.co/rxxtXN7/image-2022-05-12-203326221.png"
+					}).then(() => { window.location.href = "index.html"; }).catch((error) => {
+						const errorCode = error.code;
+						const errorMessage = error.message;
+					});
+				})
+				.catch((error) => {
+					switch (error.code) {
+						case 'auth/invalid-email':
+							document.getElementById("emailErr").innerHTML = "Please enter a valid email";
+							break;
+						case 'auth/email-already-in-use':
+							document.getElementById("emailErr").innerHTML = "That email is already in use";
+							break;
+						case 'auth/weak-password':
+							document.getElementById("passwordErr").innerHTML = "Weak password, length must be at least 6 characters";
+							break;
+						case 'auth/operation-not-allowed':
+							alert(`Error during sign up`);
+							break;
+					}
+				});
+			}else { 
+				if (!email) document.getElementById("emailErr").innerHTML = "Please enter an email";
+				else document.getElementById("emailErr").innerHTML = "";
+				if (!password) document.getElementById("passwordErr").innerHTML = "Please enter a password";
+				else document.getElementById("passwordErr").innerHTML = "";
+				if (!username) document.getElementById("nameErr").innerHTML = "Please enter a username";
+				else document.getElementById("nameErr").innerHTML = "";
+			}
+		}
+
+		document.getElementById("signup").onclick = signUp;
+	</script>
+</body>
+</html>

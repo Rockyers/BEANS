@@ -1,0 +1,13 @@
+input[type="button"], button {
+    cursor: pointer;
+}
+
+a.link, a:visited {
+    color: rgb(11, 92, 255);
+    text-decoration: underline;
+}
+
+a.error { 
+    color: red;
+    text-decoration: solid;
+}
