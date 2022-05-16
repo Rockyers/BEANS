@@ -11,3 +11,8 @@ a.error {
     color: red;
     text-decoration: solid;
 }
+
+a.good {
+    color: rgb(0, 150, 43);
+    text-decoration: solid;
+}

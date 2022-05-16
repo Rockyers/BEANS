@@ -1,21 +1,22 @@
-<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<link rel="stylesheet" href="styles.css">
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEANS</title>
 </head>
 <body>
 	<h1>BEANS</h1>
-	<p>You are signed in.</p><br>
-	<a href="changepfp.html"><img class="pfp" id="pfp" src="" alt="Profile Picture" width="100" height="100"></a>
+	<h2 id="nameText">Welcome </h2><br>
+	<a href="profile.html"><img class="pfp" id="pfp" src="" alt="Profile Picture" width="100" height="100"></a>
 	<p id="nameText"></p>
-	<p id="emailText"></p>
 	<br>
-	<button id="emailVerify">Verify Email</button>
 	<button id="logout" class="link">Logout</button>
 	<script type="module">
 		import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
 		import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-analytics.js";
-		import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+		import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
 		
 		const firebaseConfig = {
 			apiKey: "AIzaSyAiiKuYzAGoQkj88cSzqKd87kGin0jmPuE",
@@ -42,13 +43,6 @@
 		}
 		document.getElementById("logout").onclick = logout;
 
-		function verifyEmail() {
-			sendEmailVerification(auth.currentUser)
-			.then(() => {
-				document.getElementById("emailVerify").disabled = true;
-			});
-		}
-
 		function main(user) {
 			const uid = user.uid;
 			const displayName = user.displayName; 
@@ -57,11 +51,7 @@
 			const emailVerified = user.emailVerified;	
 
 			document.getElementById("pfp").src = photoURL;
-			document.getElementById("nameText").innerHTML = "Username: " + displayName;
-			document.getElementById("emailText").innerHTML = "Email: " + email;
-			
-			if (emailVerified === true) document.getElementById("emailVerify").disabled = true;
-			else document.getElementById("emailVerify").onclick = verifyEmail;
+			document.getElementById("nameText").innerHTML = "Welcome " + displayName + "!";
 		}
 	</script>
 </body>
