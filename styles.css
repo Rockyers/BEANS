@@ -16,3 +16,8 @@ a.good {
     color: rgb(0, 150, 43);
     text-decoration: solid;
 }
+
+button.img {
+    background: none;
+    border: none;
+}

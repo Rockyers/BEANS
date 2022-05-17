@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEANS</title>
+</head>
+<body>
+    <h1>BEANS</h1>
+    <h2>Are you sure?</h2>
+    <button id="delete">Delete</button><br>
+    <a id="deleteErr" class="error"></a><br><br>
+    <button id="back">Back</button><br><br><br>
+    <script type="module">
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+		import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-analytics.js";
+		import { getAuth, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+		
+		const firebaseConfig = {
+			apiKey: "AIzaSyAiiKuYzAGoQkj88cSzqKd87kGin0jmPuE",
+			authDomain: "beans-dd5e9.firebaseapp.com",
+			projectId: "beans-dd5e9",
+			storageBucket: "beans-dd5e9.appspot.com",
+			messagingSenderId: "1097417497977",
+			appId: "1:1097417497977:web:f978d5745541c8c83663a8",
+			measurementId: "G-EQB9KH77RC"
+        };
+
+		const app = initializeApp(firebaseConfig);
+		const analytics = getAnalytics(app);
+		const auth = getAuth(app);
+
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				main(user);
+			} else window.location.href = "signin.html";
+		});
+
+        function back() {
+            window.location.href = "profile.html";
+        }
+        document.getElementById("back").onclick = back;
+
+		function main(user) {
+			const uid = user.uid;
+			const displayName = user.displayName; 
+			const email = user.email;
+			const photoURL = user.photoURL;
+			const emailVerified = user.emailVerified;	
+
+            function deleteTheUser() {
+				deleteUser(user).then(() => {
+					window.location.href = "signin.html";
+				}).catch((error) => {
+					alert("To delete your account, you need to relog");
+					auth.signOut();
+					window.location.href = "signin.html";
+				});
+            }
+			document.getElementById("delete").onclick = deleteTheUser;
+		}
+	</script>
+</body>
+</html>
